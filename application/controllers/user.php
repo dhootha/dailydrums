@@ -750,7 +750,7 @@ class User extends CI_Controller {
 			 $this->load->view('front/common/footer');
 		}
 	
-	// remove subscribers from store subscription	
+	// remove subscribers from store subscription	// hello
 	public function remove_subscribers(){
 		
 			$subscribers = $this->input->post('active_subscriber');			
