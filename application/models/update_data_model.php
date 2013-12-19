@@ -20,6 +20,18 @@ class Update_data_model extends CI_Model {
 			 //$this->set_action_type();
 		    }
 
+		  public function update_user_profile($user_id='',$update_arr = array()){
+
+					if(!empty($update_arr) && $user_id != ''){
+						$this->db->where('user_id',$user_id);
+						$this->db->update('user_profile',$update_arr);
+						return true;
+						}
+						else{
+								return false;
+								}
+			}
+
 		  public function update_profile($user_id) {
 		  	
 				$updatefieldarray = array('firstname'=>$this->input->post('first_name'),
@@ -42,9 +54,7 @@ class Update_data_model extends CI_Model {
         		
         		$update_user = array('email'=>$this->input->post('business_email'));
         		$this->db->where('id',$user_id);
-        		$this->db->update('user',$update_user);
-
-				
+        		$this->db->update('user',$update_user);	
 			}
 
 		public function update_password() {

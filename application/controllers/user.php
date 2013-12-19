@@ -766,7 +766,73 @@ class User extends CI_Controller {
 								 redirect( base_url( 'user/my_subscribers/store/'.$this->uri->segment( 4 ) ) );
 								}
 			}
-	
+	public function upload_profile_picture(){
+
+			if ( ($id = $this->is_logged_in['user_id']) ){
+			      $headerdata['logged_in'] = TRUE;
+				 $headerdata['active_class'] = 'my_account';					
+			      }
+				else{
+					  $headerdata['logged_in'] = FALSE;
+					  $headerdata['active_class'] = '';
+					  redirect(site_url('user'));
+					 }
+
+			 $headerdata['action_msg'] = ( $this->session->flashdata('action_msg') != '' )?$this->session->flashdata('action_msg'):'';
+			 $headerdata['error_msg']   = ( $this->session->flashdata('error_msg') != '' )?$this->session->flashdata('error_msg'):'';
+					
+			 //$user_data = $this->Fetch_data_model->fetch_user_data( $id );
+
+			 $headerdata['user_id'] 		  = $id;
+
+			$data['user'] = $this->Fetch_data_model->fetch_user_data($id); // echo "<pre>"; print_r($data['user_data']); exit;
+
+			 $headerdata['page_title'] = 'Upload Profile Picture';
+	 
+			 $this->load->view('front/common/header', $headerdata);
+			 $this->load->view('front/common/menu_header', $headerdata);
+			 $this->load->view('front/upload_profile_picture',$data);
+			 $this->load->view('front/common/footer');
+		}
+
+	public function upload_profile_picture_submit(){
+
+			if ( ($id = $this->is_logged_in['user_id']) ){
+			      $headerdata['logged_in'] = TRUE;
+				 $headerdata['active_class'] = 'my_account';					
+			      }
+				else{
+					  $headerdata['logged_in'] = FALSE;
+					  $headerdata['active_class'] = '';
+					  redirect(site_url('user'));
+					 }
+			$type = explode('/',$_FILES['pic']['type']);
+
+			if( isset( $_FILES['pic']['name'] ) && $_FILES['pic']['name'] != "" && $type[0] == 'image' ) {
+													
+									  $ext = array_pop(explode(".",$_FILES['pic']['name']));
+									  $destination = $this->config->item('user_image');
+									  $pointer     = 'pic';
+									  $new_file_name = md5($_FILES['pic']['name'].time()); 
+									  $ret = $this->Common_model->upload_photo($pointer,$destination,$new_file_name,'232'  );
+																					  
+									  if( $ret == 'success' ) {
+											$arr = array('photo'=>$new_file_name.".".$ext );
+											if( $this->Update_data_model->update_user_profile($id,$arr) ){
+													$this->session->set_flashdata( 'action_msg',"Your Profile picture updated successfully.");
+											  		redirect(base_url('user/upload_profile_picture'));
+													}
+													else{
+														     $this->session->set_flashdata( 'error_msg',"Failed to upload your profile picture." );
+								  							redirect(base_url('user/upload_profile_picture'));
+														   }
+										  	}
+							}
+							else{
+								  $this->session->set_flashdata( 'error_msg',"Please select a picture." );
+								  redirect(base_url('user/upload_profile_picture'));
+								  }
+		}
 	
 	// Confirm subscribers in store subscription		
 	public function confirm_subscribers(){

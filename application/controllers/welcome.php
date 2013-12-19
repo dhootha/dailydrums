@@ -66,8 +66,7 @@ class Welcome extends CI_Controller {
 						else{
 							  $headerdata['logged_in'] = FALSE;
 							  }
-							  
-					 
+							  				 
 					 //echo $user_data->lat." ".$user_data->long;	  
 					 $headerdata['page_title'] = 'Welcome To Daily Drums';
 		
@@ -99,13 +98,9 @@ class Welcome extends CI_Controller {
 								  
 					 $headerdata['page_title'] = 'Latest Posts';			
 					 $headerdata['action_msg'] = ( $this->session->flashdata('action_msg') != '' )?$this->session->flashdata('action_msg'):'';
-		  
-		    		 	//$data['reviews'] = $this->Common_model->latest_post();	// $category_slug for value to searc and $search_for for searching fields
 					
 					$whr_reciews = array('r.status'=>'1');
 					$data['reviews'] = $this->Fetch_data_model->fetch_user_reviews($whr_reciews);
-	
-//echo "<pre>"; print_r($data['reviews']); exit;
                                          
                   		 $this->load->view('front/common/header', $headerdata);
 					 $this->load->view('front/common/menu_header', $headerdata);

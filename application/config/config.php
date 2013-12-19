@@ -33,6 +33,7 @@ else{
 }
 
 $config['deal_image'] = "./uploads/deal_images/";
+$config['user_image'] = "./uploads/user_img/";
 $config['store_image'] = "./uploads/store_images/";
 $config['category_image'] = "./uploads/admin/category";
 

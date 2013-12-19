@@ -2,7 +2,7 @@
  SITE URL :-  http://projectsgmd.com/dailydrums/ 
  :::::::: FTP  DETAILS ::::::::::
 
-HOST :- dailydrums@bciedu.org
+HOST :- dailydrums@bciedu.org  //  OR  //  50.87.147.161
 USER :- dailydrums@bciedu.org
 PASS :- dailydrums
 
@@ -14,4 +14,3 @@ DB NAME :- rahul_dailydrums
 USER        :- rahul_dailydrums
 PASS        :- dailydrums 
 
-	

@@ -23,7 +23,7 @@
                                 Manage Your favorite Store</a>
                             </li>
                             <?php if($this->user_type == 'end_user'){?>
-                            <li class="span2"><a href="<?=base_url('user/profile_photo_upload');?>">
+                            <li class="span2"><a href="<?=base_url('user/upload_profile_picture');?>">
                             	<span class="icon"><img src="<?=base_url('themes/front/images/camera.png');?>" alt=""></span>
                                Upload Profile Picture</a>
                             </li>

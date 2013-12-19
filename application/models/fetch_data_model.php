@@ -71,6 +71,7 @@ class Fetch_data_model extends CI_Model {
 					$this->db->from('deal_reviews r');
 					$this->db->join("deals d","d.id=r.deal_id");
 					$this->db->join('user_profile up', 'up.user_id=r.user_id');
+					$this->db->order_by('r.created_date', 'DESC');
 					$qry = $this->db->get();
 					if ( $qry->num_rows() > 0 ) {
 

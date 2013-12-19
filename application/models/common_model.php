@@ -1142,13 +1142,21 @@ d.business_image");
 
 			if(!empty($arr)){
 				$store_ids = array();
+				$deal_ids = array();
 				foreach($arr as $row){
 							$store_ids[] = $row->store_id;
+							$deal_ids[] = $row->id;
 						}
 				if(!empty($store_ids)){
 					$store_ids = array_unique($store_ids);
 					foreach($store_ids as $store){
 						$this->insert_analytic_data('',$store,$action_type);
+						}
+					}
+				if(!empty($deal_ids)){
+					$deal_ids = array_unique($deal_ids);
+					foreach($deal_ids as $deal){
+						$this->insert_analytic_data($deal,'',$action_type);
 						}
 					}
 				}

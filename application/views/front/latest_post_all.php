@@ -70,38 +70,23 @@ function printFrame(id) {
 				              		<?php foreach($reviews as $rev){ ?>
 											<div class="block"><a name="<?=$rev->review_id;?>"></a>
 															<?php if($rev->photo ==null) 
-																				$user_photo = "themes/front/images/no_image2.jpg"; 
+																				$user_photo = "themes/front/images/no_image3.jpg"; 
 																			else 
 																				$user_photo = "uploads/user_img/".$rev->photo; ?>
-										   	<div class="span2" style="width:20%; float:left;"><img src="<?=base_url($user_photo);?>" width="100%" alt=""></div>
-										       <div class="span10" style="width:30%; float:left;">
-										       	<p class="font16"><?=$rev->display_name;?></p>
+										   	<div class="span2" style="width:20%; float:left; height:auto;"><img src="<?=base_url($user_photo);?>" height="100" width="100%" alt=""></div>
+										       <div class="span10" style="width:70%; float:left;">
+										       	<p class="font16"><?=$rev->display_name;?> commented on  <a class="blue" href="<?php echo base_url('welcome/dealDetails/'.$rev->deal_id);?>"><?=$rev->business_name;?><span class="font24">&#8594;</span></a></p>
 										           <p class="gray"><?=$rev->tot_reviews;?> Reviews / <?=$rev->tot_subscription?> Followers</p>
 										           <p class="gray"><?php echo date('d M Y',strtotime($rev->created_date)); ?></p>
 										       </div>
-															<?php  
-																	if($rev->campaign_type == 'pro')
-															   			$file_name = $rev->business_logo;
-															   			elseif($rev->campaign_type == 'basic' && $rev->use_logo == '1')
-															   						$file_name = $rev->business_logo;
-															   						else 
-															   							$file_name = $rev->business_image;
-
-														  			if($file_name != '')
-																			$file_name = base_url('uploads/deal_images/'.$file_name);
-																			else
-																				 $file_name = base_url('themes/front/images/no-image.jpg');
-															?>
-											  <div style="float:right; width:25%"><img src="<?php echo $file_name;?>" alt=""></div>
-											  <div style="float:right; width:18%"><h3><a class="blue" href="<?php echo base_url('welcome/dealDetails/'.$rev->deal_id);?>"><?php echo $rev->business_name;?><span class="font24">&#8594;</span></a></h3></div>
-										       <div class="clr"></div>
+															<div class="clr"></div>
 										       <div class="body">
-										       	<p><?=$rev->title;?></p>
-										           <p><?=$rev->comment;?></p>
+										       	<div style="padding-top:10px;"><?=$rev->title;?></div>
+										           <div style="padding-top:10px;"><?=$rev->comment;?></div>
 										       </div>
 										       <div class="row-fluid">
 										       <div class="span8"></div>
-										       <div class="span4 align-right share_icon_div"> Share : 
+										       <div class="span4 align-right share_icon_div"> Share : &nbsp;
     <a href="https://twitter.com/share" data-url="https://twitter.com/" class="twitter-share-button" data-related="jasoncosta" data-lang="en" data-size="large" data-count="none">Tweet</a>
 
     <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>	</div> 
