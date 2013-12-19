@@ -1,0 +1,388 @@
+<?php
+
+if (!defined('BASEPATH'))
+    exit('No direct script access allowed');
+/*
+ * Landing page for the front end
+ */
+
+class User extends CI_Controller {
+
+    public  $is_logged_in;
+    public  $user_session_id = 'user';
+    private $secret_key = 'useriddailydrums';
+    public $local_area = '';
+
+    public function __construct() {
+        
+        parent::__construct();
+    	
+	 $this->load->library('session');
+	 $this->load->library('Utils');
+    $this->load->library('authmanager'); 
+    $this->load->model('Common_model');
+	 $this->load->model('Login_model');
+	 $this->load->model('Fetch_data_model');
+	 $this->load->model('Update_data_model');
+	 $this->load->library('form_validation');
+        
+        $this->is_logged_in = $this->authmanager->is_logged_in('user');
+
+	if( $this->is_logged_in ) {
+
+			$user_data = $this->Fetch_data_model->fetch_user_data($this->is_logged_in['user_id']);
+			$local_area = $user_data->city.", ".$user_data->state.", ".$user_data->country_name;
+
+			if( strlen($local_area) > 30 ) {
+
+				$local_area = substr( $local_area,0,27 )."...";
+				}
+			$this->local_area = $local_area;
+		}
+    }
+
+    /**
+     * Index Page for this controller.
+     */
+    public function index() {
+
+			 if ($this->is_logged_in['user_id']) {
+			     redirect(site_url('user/profile'));
+			     }
+			 
+			$headerdata['page_title'] = 'Login To Daily Drums';
+		     //   $headerdata['countryList'] = $this->Common_model->get_countries();
+			// $this->session->unset_userdata('some_name');
+
+			if( $this->session->flashdata( 'daily_drums_login_error') != '' ) 
+					$headerdata['login_error'] = $this->session->flashdata( 'daily_drums_login_error');
+				else
+					$headerdata['login_error'] = '';
+					
+			if( $this->session->flashdata( 'last_email') != '' ) 
+					$headerdata['last_email'] = $this->session->flashdata( 'last_email');
+				else
+					$headerdata['last_email'] = '';
+					
+			if( $this->session->flashdata( 'last_password') != '' ) 
+					$headerdata['last_password'] = $this->session->flashdata( 'last_password');
+				else
+					$headerdata['last_password'] = '';
+
+			$headerdata['search_header'] = $this->load->view('front/common/search_header');								 
+			$this->load->view('front/common/header', $headerdata);
+			$this->load->view('front/common/menu_header', $headerdata);
+			$this->load->view('front/login');
+			$this->load->view('front/common/footer');
+    	}
+
+  	public function login() {
+
+			 if ($this->is_logged_in['user_id']) {
+			     		redirect(site_url('user/profile'));
+			     }
+				else{
+						$headerdata['logged_in'] = FALSE;
+						 $headerdata['active_class'] = '';
+					}
+
+			$this->form_validation->set_rules('daily_drums_user_id', 'E-Mail', 'trim|required|valid_email|xss_clean|email');
+			$this->form_validation->set_rules('daily_drums_password', 'Password', 'trim|required|xss_clean');
+
+			if( $this->form_validation->run() == FALSE ){
+
+					if( form_error('daily_drums_user_id') )
+							$this->session->set_flashdata( 'daily_drums_login_error',form_error( 'daily_drums_user_id') );
+						elseif( form_error('daily_drums_password') )
+							$this->session->set_flashdata( 'daily_drums_login_error',form_error('daily_drums_password') );
+					
+					$this->session->set_flashdata('last_email',$this->input->post('daily_drums_user_id') );
+					$this->session->set_flashdata('last_password',$this->input->post('daily_drums_password') );
+	
+					redirect('user');
+					
+					}
+					else { 
+							if( ( $data = $this->Login_model->authinticate_login() ) != FALSE  ) {
+
+									$this->set_session_data( $data, 'user' ); 
+									//echo  "Login Successfully";
+									redirect(base_url('user/profile'));
+								}
+								else{
+				
+									 	$this->session->set_flashdata( 'daily_drums_login_error',"Wrong E-mail Id or Password." );
+										$this->session->set_flashdata('last_email',$this->input->post('daily_drums_user_id') );
+										$this->session->set_flashdata('last_password',$this->input->post('daily_drums_password') );
+
+										redirect(base_url('user'));
+										echo "Failed to login";
+									 }						
+						   }
+		}
+
+	public function profile() {
+
+			   if ($this->is_logged_in['user_id']) {
+			      		$headerdata['logged_in'] = TRUE;
+					$headerdata['active_class'] = 'myaccount';
+			      }
+				else{
+						 $headerdata['logged_in'] = FALSE;
+						 $headerdata['active_class'] = '';
+						redirect(site_url('user'));
+					}
+			 
+			 $headerdata['page_title'] = 'Welcome To Dailydrums';
+			 $headerdata['search_header'] = $this->load->view('front/common/search_header');	 
+
+			 $this->load->view('front/common/header', $headerdata);
+			 $this->load->view('front/common/menu_header', $headerdata);
+			 $this->load->view('front/account_view');
+			 $this->load->view('front/common/footer');
+
+		}	
+
+	public function editprofile() {
+
+			   if ( ($id = $this->is_logged_in['user_id']) ) {
+
+			      		$headerdata['logged_in'] = TRUE;
+					$headerdata['active_class'] = 'myaccount';					
+			      }
+				else{
+						 $headerdata['logged_in'] = FALSE;
+						 $headerdata['active_class'] = '';
+						 redirect(site_url('user'));
+					}
+
+			 $headerdata['action_msg'] = ( $this->session->flashdata('action_msg') != '' )?$this->session->flashdata('action_msg'):'';
+					
+			 $user_data = $this->Fetch_data_model->fetch_user_data( $id );
+
+			$headerdata['firstname'] 		  = ($user_data->firstname)?$user_data->firstname:'';
+			$headerdata['lastname'] 		  = ($user_data->lastname)?$user_data->lastname:'';
+			$headerdata['business_email'] = ($user_data->business_email)?$user_data->business_email:'';
+			$headerdata['primary_phone']  = ($user_data->primary_phone)?$user_data->primary_phone:'';
+			$headerdata['zip'] 			  = ($user_data->zip)?$user_data->zip:'';
+			$headerdata['user_id'] 		  = ($user_data->user_id)?$user_data->user_id:'';
+
+			 $headerdata['page_title'] = 'Welcome To Dailydrums';
+			$headerdata['search_header'] = $this->load->view('front/common/search_header');
+
+			 $this->load->view('front/common/header', $headerdata);
+			 $this->load->view('front/common/menu_header', $headerdata);
+			 $this->load->view('front/edit_account');
+			 $this->load->view('front/common/footer');
+
+		}	
+
+	public function updateprofile() {
+
+			$this->form_validation->set_rules('business_email', 'Legal Email', 'trim|required|valid_email|xss_clean|email');
+			$this->form_validation->set_rules('first_name', 'First Name', 'trim|required|max_length[30]|xss_clean');
+			$this->form_validation->set_rules('last_name', 'Last Name', 'trim|required|max_length[30]|xss_clean');
+			$this->form_validation->set_rules('primary_phone', 'phone', 'integer|trim|required|max_length[15]|xss_clean');	
+			$this->form_validation->set_rules('zip', 'Zip', 'trim|required|max_length[10]|xss_clean');
+			$this->form_validation->set_error_delimiters('*', '');
+			if( $this->form_validation->run() == FALSE ){
+
+					$this->editprofile();
+
+				}
+				else {
+
+						$this->Update_data_model->update_profile();
+						//$this->session->set_userdata();
+						$this->session->set_flashdata( 'action_msg',"Profile Updated Successfully." );
+						redirect(base_url('user/editprofile'));					
+					}
+		}
+
+
+	public function changepassword() {
+
+			   if ( ($id = $this->is_logged_in['user_id']) ) {
+
+			      		$headerdata['logged_in'] = TRUE;
+					$headerdata['active_class'] = 'myaccount';					
+			      }
+				else{
+						 $headerdata['logged_in'] = FALSE;
+						 $headerdata['active_class'] = '';
+						 redirect(site_url('user'));
+					}
+
+			 $headerdata['action_msg'] = ( $this->session->flashdata('action_msg') != '' )?$this->session->flashdata('action_msg'):'';
+			 $headerdata['error_msg']   = ( $this->session->flashdata('error_msg') != '' )?$this->session->flashdata('error_msg'):'';
+					
+			 //$user_data = $this->Fetch_data_model->fetch_user_data( $id );
+
+			$headerdata['user_id'] 		  = $id;
+
+			 $headerdata['page_title'] = 'Welcome To Dailydrums';
+			 $headerdata['search_header'] = $this->load->view('front/common/search_header');
+	 
+			 $this->load->view('front/common/header', $headerdata);
+			 $this->load->view('front/common/menu_header', $headerdata);
+			 $this->load->view('front/change_password');
+			 $this->load->view('front/common/footer');
+
+		}
+
+
+	public function updatepassword() {
+
+			$this->form_validation->set_rules('new_password', 'New Password', 'trim|required|max_length[15]|xss_clean');
+			$this->form_validation->set_rules('new_password_again', 'Confirm Password', 'trim|required|max_length[15]|xss_clean');
+			$this->form_validation->set_rules('old_password', 'Old Password', 'trim|required|max_length[15]|xss_clean');
+			$this->form_validation->set_error_delimiters('*', '');
+			if( $this->form_validation->run() == FALSE ){
+
+					$this->editprofile();
+				}
+				else {
+						$new_password = $this->input->post('new_password');
+						$confirm_password = $this->input->post('new_password_again');
+
+						if( $new_password != $confirm_password ) {
+
+								$this->session->set_flashdata( 'error_msg',"Both The Password Has Not Matched." );
+								redirect(base_url('user/changepassword'));
+							}
+							else {
+										$this->Update_data_model->update_password();
+										$this->session->set_flashdata( 'action_msg',"Password Updated Successfully." );
+										redirect(base_url('user/changepassword'));
+								
+									  }					
+					}
+		}
+
+
+	public function settings() {
+
+			if ($this->is_logged_in['user_id']) {
+			      		$headerdata['logged_in'] = TRUE;
+			    }
+				else{
+						 $headerdata['logged_in'] = FALSE;
+						redirect(site_url());
+					}
+				
+			 $headerdata['page_title'] = 'Settings';
+			 $headerdata['search_header'] = $this->load->view('front/common/search_header');
+
+			 $this->load->view('front/common/header', $headerdata);
+			 $this->load->view('front/user/settings_view');
+			 $this->load->view('front/common/footer');
+		  
+	    	}
+
+	public function update_local_area() {
+
+			$ret = array('flag'=>0,"desc"=>'');
+
+			if ( !$this->is_logged_in['user_id'] ) {
+			      		
+					$ret['desc'] = "Failed To update.";
+					}
+					else {
+
+							$this->form_validation->set_rules('country', 'Country', 'trim|required|max_length[15]|xss_clean');
+							$this->form_validation->set_rules('state', 'State', 'trim|required|max_length[15]|xss_clean');
+							$this->form_validation->set_rules('city', 'City', 'trim|required|max_length[15]|xss_clean');
+							$this->form_validation->set_error_delimiters('', '');
+							if( $this->form_validation->run() == FALSE ){
+
+									$ret['desc'] =  "Some Fields are blank.";
+								}
+								else {
+
+										  if( $this->Update_data_model->update_local_area($this->is_logged_in['user_id']) ) {
+
+													$ret['desc'] = "Local Area Update Successfully.";
+													$ret['flag'] = '1';
+												}
+												else{
+
+														$ret['desc'] = "Updation Aborted.";
+													}
+									   }
+					}
+				echo json_encode($ret);
+				exit;
+		}
+		
+	public function forget_password() {
+
+				$ret = array();
+				$ret['flag'] = '0';
+				$this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|xss_clean|email');
+				if( $this->form_validation->run() == FALSE ){
+					
+						$ret['msg']  = "Provide Your Valid Email";
+					}
+					else{ 
+								$email = $this->input->post('email');
+								if( ! ( $data = $this->Fetch_data_model->fetch_user_data('',$email) ) ) {
+									
+											$ret['msg']  = "Email Id Not Found ";
+										}
+										else{ 
+										
+										print_r($data);
+										exit;
+													//email fielda
+												  $change_password_link = md5(trim($email));
+										        $to = trim($email);
+										        $subject = 'Change Password Link';
+										        $fromemail = 'noreply@dailydrums.com.com';
+										        $fromname = 'Dailydrums';
+										        $data['change_password_link'] = $change_password_link;
+										        //$data['username'] = $username;
+										        //$msg = $this->load->view('email_templates/change_password_mail',$data,TRUE);
+
+										        //$this->utils->send_email($to, $subject, $msg, $fromemail, $fromname);
+										        
+													$ret['flag'] = '1';
+													$ret['msg']  = "Email Id Found ";
+											}
+						}
+					echo json_encode($ret);
+					exit;		
+		}
+
+	public function fetch_country_list() {
+
+				$data = $this->Common_model->get_countries();
+				for($countries='',$i=0;$i<count($data);$i++){
+						$countries .= "<option value='".$data[$i]->id."'>".$data[$i]->country_name."</option>";
+					}
+				echo json_encode($countries);
+				exit;
+		}
+
+	public function logout() {
+
+				 if ( !$this->is_logged_in['user_id'] ) {
+				     		redirect(base_url('user'));
+				 	}
+
+				$this->remove_session_data('user');	
+				redirect(base_url());	
+			}
+
+	private function set_session_data( $data, $session_name ) {
+			
+			$user_session_array = array($session_name=>$data);
+			$this->session->set_userdata($user_session_array);
+		}
+
+	private function remove_session_data( $session_name ) {
+
+			$this->session->unset_userdata($session_name);
+		}
+
+}
+?>

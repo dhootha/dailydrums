@@ -1,0 +1,105 @@
+<!--Start Content-->
+        <div class="container-fluid">
+            <div class="main_container">
+                <div class="row-fluid">
+                <div class="span9 main_content">
+                
+                <?php if(!empty($dealDetails)){?>
+                	<div class="main_head">
+                    	<h2 class="title floatleft">Deal Details</h2>
+                        <div class="floatright pad_t15"><strong><span class="blue1">Offer Vaild From: </span> <?php echo date('d M Y ',strtotime($dealDetails->duration_from));?> <span class="blue1"> To </span><?php echo date('d M Y ',strtotime($dealDetails->duration_to));?></strong></div>
+                        <div class="clr"></div>
+                  </div>
+                    <div class="main_head1">
+                        <div class="clr"></div>
+                    </div>
+                    <h3 class="title floatleft"><?php echo $dealDetails->business_name;?></h3>
+                    <div class="clr"></div>
+                    <?php if($dealDetails->campaign_type == 'pro'){?>
+                    
+                    				<iframe src="<?=$dealDetails->campaign_url;?>" width="100%" height="1000"></iframe>
+                    <?php } ?>
+                    <?php if($dealDetails->campaign_type == 'basic'){?>
+                    <div class="address1">
+                        <?php if(isset($dealDetails->address)){?>
+                        <div class="row-fluid">
+                    		<div class="span3"><img src="<?php echo base_url('themes/front/images/location_icon2.png');?>" class="floatleft" alt=""> ADDRESS</div>
+                            <div class="span9"><?php echo $dealDetails->address;?></div>
+                            <div class="clr"></div>
+	                    </div>
+                        <?php }?>
+                        <?php if(isset($dealDetails->landmarks)){?>
+                        <div class="row-fluid">
+                    		<div class="span3"><img src="<?php echo base_url('themes/front/images/train_icon1.png');?>" class="floatleft" alt=""> landmark</div>
+                            <div class="span9"><?php echo $dealDetails->landmarks;?></div>
+                            <div class="clr"></div>
+	                    </div>
+                        <?php }?>
+                        <?php if(isset($dealDetails->website)){?>
+                        <div class="row-fluid">
+                    		<div class="span3"><img src="<?php echo base_url('themes/front/images/location_icon2.png');?>" class="floatleft" alt=""> Website</div>
+                            <div class="span9"><?php echo $dealDetails->website;?></div>
+                            <div class="clr"></div>
+	                    </div>
+                        <?php }?>
+                        <?php if(isset($dealDetails->timings)){?>
+                        <div class="row-fluid">
+                    		<div class="span3"><img src="<?php echo base_url('themes/front/images/location_icon2.png');?>" class="floatleft" alt=""> Timings</div>
+                            <div class="span9"><?php echo $dealDetails->timings;?></div>
+                            <div class="clr"></div>
+	                    </div>
+                        <?php }?>
+                        <?php if(isset($dealDetails->display_name)){?>
+                    	<div class="row-fluid">
+                    		<div class="span3"><img src="<?php echo base_url('themes/front/images/location_icon2.png');?>" class="floatleft" alt=""> Created By</div>
+                            <div class="span9"><?php echo $dealDetails->display_name;?></div>
+                            <div class="clr"></div>
+	                    </div>
+                        <?php }?>
+                        <?php if(isset($dealDetails->category_name)){?>
+                        <div class="row-fluid">
+                    		<div class="span3"><img src="<?php echo base_url('themes/front/images/train_icon1.png');?>" class="floatleft" alt=""> Category</div>
+                            <div class="span9"><?php echo $dealDetails->category_name;?></div>
+                            <div class="clr"></div>
+	                    </div>
+                        <?php }?>
+                        <?php if(isset($dealDetails->business_name)){?>
+                        <div class="row-fluid">
+                    		<div class="span3"><img src="<?php echo base_url('themes/front/images/location_icon2.png');?>" class="floatleft" alt=""> Deal Name</div>
+                            <div class="span9"><?php echo $dealDetails->business_name;?></div>
+                            <div class="clr"></div>
+	                    </div>
+                        <?php }?>
+                        
+                        
+                        <div class="row-fluid">
+                    		<div class="span7"><img src="<?php echo base_url().'uploads/deal_images/'.$dealDetails->business_image;?>" alt=""></div>
+                            
+                            <div class="clr"></div>
+	                    </div>
+                        
+                    </div>
+                    
+                    <?php } ?> <!-- For Basic -->
+                    
+                    <p><?php echo $dealDetails->business_description;?></p>
+                    
+                    
+                    <?php } else{ ?>
+                    
+                    		<div class="main_head">
+		                    	<h2 class="title floatleft">Deal Details</h2>
+		                        <div class="clr"></div>
+		                  </div>
+		                  <span class="blue"><h3>No data found</h3></span>
+		               <?php } ?>
+                    
+                </div>
+         
+ <?php  $this->load->view('front/common/right_menu'); ?>
+                
+                <div class="clr"></div>
+                </div>
+            </div>
+        </div>
+        <!--End Content-->

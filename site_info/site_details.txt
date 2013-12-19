@@ -1,0 +1,17 @@
+
+ SITE URL :-  http://projectsgmd.com/dailydrums/ 
+ :::::::: FTP  DETAILS ::::::::::
+
+HOST :- dailydrums@bciedu.org
+USER :- dailydrums@bciedu.org
+PASS :- dailydrums
+
+:::::::::: DATABASE DETAILS :::::::::::
+
+Link: bciedu.org/phpMyAdmin
+
+DB NAME :- rahul_dailydrums
+USER        :- rahul_dailydrums
+PASS        :- dailydrums 
+
+	

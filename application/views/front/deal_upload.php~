@@ -1,0 +1,219 @@
+<!--Start Content-->
+        <div class="container-fluid">
+            <div class="main_container">
+                <div class="row-fluid">
+                <div class="span9 main_content">
+                    <h2 class="title">Upload deal</h2>
+                    <div class="change_password">
+                    	<div class="block">
+				
+                          					
+				 <div class="row-fluid">
+                            	<div class="span3 form_label">&nbsp;</div>
+                                	<div class="span4"><div class="<?=($this->session->flashdata('action') == '0')?'error_message':'success_message1';?>" id="action_msg"><?=$this->session->flashdata('action_msg');?>&nbsp;</div></div>
+                                <div class="clr"></div>
+                            </div>
+
+				<form name="deal_upload" action="<?=base_url('user/deal_upload_submit');?>" method="post" enctype="multipart/form-data">
+				<input type="hidden" name="user_id" value="" >
+                             <div class="row-fluid">
+                            	<div class="span3 form_label">Business Name: <span class="error_message">*</span></div>
+                                	<div class="span4"><input type="text" name="business_name" id="business_name" value="" class="inputbox"></div>
+					<span class="error_message" id="form_error_first_name"><?=form_error('business_name');?>&nbsp;</span>
+                                <div class="clr"></div>
+                            </div>
+                            <div class="row-fluid">
+                            	<div class="span3 form_label">Deal Category: <span class="error_message">*</span></div>
+                                	<div class="span4">
+                                								<select name="deal_category" id="deal_category" class="inputbox">
+                                										<option value="">Select a category</option>
+                                										<?php foreach( $category as $cat ) {?>
+                                										<option value="<?=$cat->category_id;?>"><?=$cat->category_name;?></option>
+                                										
+                                										<?php } ?>
+                                								</select>
+                                	</div>
+					<span class="error_message" id="form_error_first_name"><?=form_error('deal_category');?>&nbsp;</span>
+                                <div class="clr"></div>
+                            </div>
+                            <div class="row-fluid">
+                            	<div class="span3 form_label">Business Description: <span class="error_message">*</span></div>
+                                <div class="span4"><input type="text" name="business_description" id="business_description" value="" class="inputbox"></div>
+				     <span class="error_message" id="form_error_last_name"><?=form_error('business_description');?>&nbsp;</span>
+                                <div class="clr"></div>
+                            </div>
+                            <div class="row-fluid">
+                            	<div class="span3 form_label">Duration(Days): <span class="error_message">*</span></div>
+                                <div class="span4"><input type="text" name="duration" id="duration" value="" class="inputbox"></div>
+					<span class="error_message" id="form_error_business_email"><?=form_error('duration');?>&nbsp;</span>
+                                <div class="clr"></div>
+                            </div>
+                            <div class="row-fluid">
+                            	<div class="span3 form_label">Price($): <span class="error_message">*</span></div>
+                                <div class="span4"><input type="text" maxlength="15" name="price" id="price" value="" class="inputbox"></div>
+					<span class="error_message" id="form_error_primary_phone"><?=form_error('price');?>&nbsp;</span>
+                                <div class="clr"></div>
+                            </div>
+                            <div class="row-fluid">
+                            	<div class="span3 form_label">Image: <span class="error_message">*</span></div>
+                                <div class="span4"><input type="file" maxlength="10" name="image" id="image" value="" class="inputbox"></div>
+					<span class="error_message" id="form_error_zip"><?=form_error('image');?>&nbsp;</span>
+                                <div class="clr"></div>
+                            </div>
+                            <div class="row-fluid">
+                            	<div class="span3 form_label">Address: </div>
+                                <div class="span4"><input type="text"  name="address" id="address" value="" class="inputbox"></div>
+					<span class="error_message" id="form_error_primary_phone"><?=form_error('address');?>&nbsp;</span>
+                                <div class="clr"></div>
+                            </div>
+                            <div class="row-fluid">
+                            	<div class="span3 form_label">Landmarks: </div>
+                                <div class="span4"><input type="text"  name="landmarks" id="landmarks" value="" class="inputbox"></div>
+					<span class="error_message" id="form_error_primary_phone"><?=form_error('landmarks');?>&nbsp;</span>
+                                <div class="clr"></div>
+                            </div>
+                            <div class="row-fluid">
+                            	<div class="span3 form_label">Timings: </div>
+                                <div class="span4"><input type="text"  name="timings" id="timings" value="" class="inputbox"></div>
+					<span class="error_message" id="form_error_primary_phone"><?=form_error('address');?>&nbsp;</span>
+                                <div class="clr"></div>
+                            </div>
+                            
+                            <div class="row-fluid">
+                                <div class="floatleft"><a class="blue_btn1" href="<?=base_url('user/profile');?>">BACK</a></div>
+                                <div class="floatright"><a class="blue_btn1" id="save"  href="#" onclick="document.deal_upload.submit();">Submit</a></div>
+                            </div>
+                            <div class="clr"></div>
+                        </div>
+                        
+                    </div>
+                </div>
+		</form>
+                
+		 <?php  $this->load->view('front/common/right_menu'); ?>
+
+                <div class="latest_post">
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <div class="head">
+                                <h2 class="title floatleft">LATEST POST</h2>
+                                <a href="#" class="floatright">view all +</a>
+                                <div class="clr"></div>                                
+                            </div>
+                            <ul>
+                                <li class="active">
+                                    <div class="img"><img src="<?=base_url('themes/front/images/peaople_img1.jpg');?>" alt=""></div>
+                                    <div class="info">
+                                        <h2 class="red">Aliquam lorem ante olsa</h2>
+                                        <p>06 February 2013 by Dani, in Entertainment</p>
+                                        <p>A wonderful serenity has taken possession of my entire soul, like these sweet mo...</p>
+                                        <p><a href="#">Read more +</a></p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="img"><img src="<?=base_url('themes/front/images/peaople_img1.jpg');?>" alt=""></div>
+                                    <div class="info">
+                                        <h2 class="red">Aliquam lorem ante olsa</h2>
+                                        <p>06 February 2013 by Dani, in Entertainment</p>
+                                        <p>A wonderful serenity has taken possession of my entire soul, like these sweet mo...</p>
+                                        <p><a href="#">Read more +</a></p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="img"><img src="<?=base_url('themes/front/images/peaople_img1.jpg');?>" alt=""></div>
+                                    <div class="info">
+                                        <h2 class="red">Aliquam lorem ante olsa</h2>
+                                        <p>06 February 2013 by Dani, in Entertainment</p>
+                                        <p>A wonderful serenity has taken possession of my entire soul, like these sweet mo...</p>
+                                        <p><a href="#">Read more +</a></p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="clr"></div>
+                </div>
+            </div>
+        </div>
+        <!--End Content-->
+
+<script type="text/javascript">
+
+	/*	$(document).ready( function(){
+
+					$('.inputbox').focusin(function(){
+
+						$(this).removeClass('error_message_border');	
+						$('.error_message').html('&nbsp;');
+						});	
+
+					$('#save').click(function(){
+
+								var first_name = $('#first_name').val();
+								var last_name = $('#last_name').val();
+								var business_email = $('#business_email').val();
+								var primary_phone = $('#primary_phone').val();
+								var zip = $('#zip').val();
+								var error_flag = false; 
+								var space_regex = /^[a-zA-Z0-9][a-zA-Z0-9]+$/;
+								if( !first_name.match( space_regex ) ) {
+
+										$('#form_error_first_name').html("* Provide First Name Properly");
+										$('#first_name').addClass('error_message_border');
+										error_flag = true;
+									}
+								if( !last_name.match( space_regex ) ) {
+
+										$('#form_error_last_name').html("* Provide Last Name Properly");
+										$('#last_name').addClass('error_message_border');
+										error_flag = true;
+									}
+								if( business_email == '' ) {
+
+										$('#form_error_business_email').html("* Provide Legal Email Id Properly");
+										$('#business_email').addClass('error_message_border');
+										error_flag = true;
+									}
+									else {
+
+											var re = /^[_a-z]+(.[_a-z0-9-]+)*@[a-z0-9-]+(.[a-z0-9-]+)*(.[a-z]{2,3})$/;
+
+										 	if( !business_email.match( re ) ) {
+									     	   		
+												$('#form_error_business_email').html("* Provide Valid Email Id.");
+												$('#usiness_email').addClass('error_message_border');
+												error_flag = true;
+												}	
+										  }
+								if( !primary_phone.match( space_regex) ) {
+
+										$('#form_error_primary_phone').html("* Provide Primary Phone");
+										$('#primary_phone').addClass('error_message_border');
+										error_flag = true;
+									}
+									else{
+											if( isNaN(primary_phone) ||  primary_phone.length < 10  ) {
+											
+													$('#form_error_primary_phone').html("* Provide Primary Phone Properly");
+													$('#primary_phone').addClass('error_message_border');	
+													error_flag = true;
+												}
+										}
+								if( !zip.match( space_regex) ) {
+
+										$('#form_error_zip').html("* Provide Zip");
+										$('#zip').addClass('error_message_border');
+										error_flag = true;
+									}
+
+								if( !error_flag ) {
+
+										document.update_profile.submit();
+										}
+							});
+			});*/
+
+</script>
+
+

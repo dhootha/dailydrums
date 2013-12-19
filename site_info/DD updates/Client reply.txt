@@ -1,0 +1,8 @@
+I have the answers below-
+
+1) The black header section appears after login. The reason for having 'PRICING' on top is to encourage and help Business users to have an option readily available to upgrade their membership. The upgrade option and the order amount details are missing. 
+
+See attached document for details. 
+
+2) The change location is always (US city and state) or zip-code based. If Zip code is entered, you can validate it as a single entry. 
+If city name is enetered, you can bring a drop down with upto 5 or 6 entries that match the characters as they are entered. Please ref. attached document for details.

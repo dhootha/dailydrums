@@ -1,0 +1,130 @@
+/* Demo CSS - You do not need this css in your own slider */
+
+body{
+	font-family: "Open Sans", helvetica, arial;
+}
+
+pre{
+	font-family: "Source Code Pro", monospace;
+	display: block;
+	padding: 9.5px;
+	margin: 0 0 10px;
+	font-size: 13px;
+	line-height: 20px;
+	word-break: break-all;
+	word-wrap: break-word;
+	white-space: pre;
+	white-space: pre-wrap;
+	background-color: whiteSmoke;
+	border: 1px solid #CCC;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+}
+
+h2{
+	font-size: 48px;
+}
+
+pre + h2{
+	margin-top: 80px;
+}
+
+#container{
+	max-width:620px;
+	margin:0 auto;
+	padding-bottom:80px;
+}
+
+#banner-fade,
+#banner-slide{
+	margin-bottom: 60px;
+}
+
+ul.bjqs-controls.v-centered li a{
+	display:block;
+	padding:10px;
+	background:#fff;
+	color:#000;
+	text-decoration: none;
+}
+
+ul.bjqs-controls.v-centered li a:hover{
+	color:#fff;
+}
+
+ol.bjqs-markers li a{
+	padding:5px 10px;
+	background:#000;
+	color:#fff;
+	margin:5px;
+	text-decoration: none;
+}
+
+ol.bjqs-markers li.active-marker a,
+ol.bjqs-markers li a:hover{
+	background: #999;
+}
+
+p.bjqs-caption{
+	background: rgba(255,255,255,0.5);
+}
+
+/*================================*/
+.main-div.s_content{
+	border-top:1px solid red;
+	border-top:1px solid red;
+	width:92%;
+	margin:5px 4%;
+	padding:0;
+}
+.s_content_inn{
+	 width:50%;
+	 float:left;
+	 padding:3px 0 0;
+}
+.s_content_inn_holder{
+	padding:0px 30px;
+}
+.s_content_inn_text{
+	width:42%;
+	float:left;
+	text-align:right;
+	margin-right:2.8%;
+}
+
+.s_content_inn_img{
+	 width:55%;
+	 float:right;
+	 text-align:right;
+}
+.bjqs li{
+	background:url(one1.jpg) repeat-y 50% top;
+	width:100%;
+}
+#banner-slide.banner-slide_main{
+	margin-bottom:0 !important;
+	width:100%;
+	margin:0 auto;
+}
+.s_content_inn_text h2{
+	font-size:22px;
+	color:#333;
+}
+.s_content_inn_text h2 span{
+	font-size:22px;
+	color:#f87e17;
+}
+.s_content_inn_text h4{
+	color:#666;
+	font-weight:normal;
+	font-size:14px;
+	margin-top:10px;
+}
+
+.s_content_inn_text h5{
+	font-size:14px;
+	margin-top:30px;
+}
+
+
