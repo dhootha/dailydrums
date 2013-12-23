@@ -60,9 +60,9 @@ class Home extends CI_Controller {
     
     public function signup() {
     				
-    								 $this->form_validation->set_rules('first_name', 'First Name', 'trim|required|max_length[30]|xss_clean');
-    								 $this->form_validation->set_rules('last_name', 'Last Name', 'trim|required|max_length[30]|xss_clean');
-									 $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|xss_clean|email|is_unique[user.email]');
+    								 	$this->form_validation->set_rules('first_name', 'First Name', 'trim|required|max_length[30]|xss_clean');
+    								 	$this->form_validation->set_rules('last_name', 'Last Name', 'trim|required|max_length[30]|xss_clean');
+									$this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|xss_clean|email|is_unique[user.email]');
 									 $this->form_validation->set_rules('retype_email', 'Retype Email', 'trim|required|valid_email|xss_clean|email');
 									 $this->form_validation->set_rules('password', 'Password', 'trim|required|max_length[30]|min_length[8]|xss_clean');
 									 $this->form_validation->set_rules('retype_password', 'Retype Password', 'trim|required|max_length[30]|min_length[8]|xss_clean');									 

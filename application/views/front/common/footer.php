@@ -44,8 +44,15 @@
     <p id="back-top" style="display: block;">
 		<a href="#top"><span></span></a>
 	</p>
-    
-    
+  
+<!-- FOR SEARCH BLACK HEADER --> 
+		<script type="text/javascript">
+				$(".search_btn").on("click",function(){
+						if($('#blog_search').val() != '')
+					    		window.open('<?=base_url("blog")?>?s='+$('#blog_search').val(),'_blank');
+					});
+		</script>
+<!-- FOR SEARCH BLACK HEADER --> 
     
 </body>
 </html>

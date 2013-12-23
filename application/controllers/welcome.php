@@ -61,13 +61,14 @@ class Welcome extends CI_Controller {
 						  		
 						  		 $user_data = $this->Fetch_data_model->fetch_user_data($this->is_logged_in['user_id']);
 						 		 $data['neighborhood_deals'] = $this->Common_model->neighborhoodDeals($user_data->lat,$user_data->long,'25');
+
+								 $this->Common_model->make_analytic_data($data['neighborhood_deals'],'views');  		// Insert data to analytics table for views
 					    		}
 					    }
 						else{
 							  $headerdata['logged_in'] = FALSE;
 							  }
-							  				 
-					 //echo $user_data->lat." ".$user_data->long;	  
+
 					 $headerdata['page_title'] = 'Welcome To Daily Drums';
 		
 					$data['deals']                = $this->Common_model->getDeals('pro','1');  // param - '1' means In-store type camapigns
@@ -75,9 +76,15 @@ class Welcome extends CI_Controller {
 					$data['endsoon_deals'] = $this->Common_model->endingSoonDeals();
 					$slider_deals                 = $this->Common_model->getTotalDeals();
 
+					$this->Common_model->make_analytic_data($data['deals'] ,'views');  									// Insert data to analytics table for views
+					$this->Common_model->make_analytic_data($data['online_deals'] ,'views');  							// Insert data to analytics table for views
+					$this->Common_model->make_analytic_data($data['endsoon_deals'] ,'views');  						// Insert data to analytics table for views
+
 					$rand_index  = array_rand( $slider_deals,6);
 					foreach($rand_index as $index)
 							$data['slider_deals'][] = $slider_deals[$index];
+
+					$this->Common_model->make_analytic_data($data['slider_deals'] ,'views');  							// Insert data to analytics table for views
 					
 					 $this->load->view('front/common/header', $headerdata);
 					 $this->load->view('front/common/menu_header', $headerdata);
@@ -125,8 +132,9 @@ class Welcome extends CI_Controller {
 					 $headerdata['page_title'] = 'Ending soon campaigns';			
 					 $headerdata['action_msg'] = ( $this->session->flashdata('action_msg') != '' )?$this->session->flashdata('action_msg'):'';
 		  
-		    		 $data['deals'] = $this->Common_model->neighborhoodDeals($user_data->lat,$user_data->long,'25');	// $category_slug for value to searc and $search_for for searching fields
+		    		 	 $data['deals'] = $this->Common_model->neighborhoodDeals($user_data->lat,$user_data->long,'25');	// $category_slug for value to searc and $search_for for searching fields
                                          
+					 $this->Common_model->make_analytic_data($data['deals'],'views');  						// Insert data to analytics table for views
                   		 $this->load->view('front/common/header', $headerdata);
 					 $this->load->view('front/common/menu_header', $headerdata);
 					 $this->load->view('front/neighborhood_all',$data);
@@ -147,9 +155,11 @@ class Welcome extends CI_Controller {
 					 $headerdata['page_title'] = 'Ending soon campaigns';			
 					 $headerdata['action_msg'] = ( $this->session->flashdata('action_msg') != '' )?$this->session->flashdata('action_msg'):'';
 		  
-		    		 $data['deals'] = $this->Common_model->endingSoonDeals();	// $category_slug for value to searc and $search_for for searching fields
-                                         
-                  $this->load->view('front/common/header', $headerdata);
+		    		      $data['deals'] = $this->Common_model->endingSoonDeals();	// $category_slug for value to searc and $search_for for searching fields
+
+                          $this->Common_model->make_analytic_data($data['deals'],'views');  						// Insert data to analytics table for views         
+     
+                          $this->load->view('front/common/header', $headerdata);
 					 $this->load->view('front/common/menu_header', $headerdata);
 					 $this->load->view('front/ending_soon_all',$data);
 					 $this->load->view('front/common/footer');
@@ -183,9 +193,11 @@ class Welcome extends CI_Controller {
 			    				//echo $category_slug = preg_replace("/[^A-Za-z0-9 ]/", '',$category_slug); exit;
 			    				$search_for = 'all';
                                 }
-		    		 $data['deals'] = $this->Common_model->getTotalDeals('',$category_slug,$search_for,'pro','3');	// $category_slug for value to searc and $search_for for searching fields
-                                         
-                $this->load->view('front/common/header', $headerdata);
+		    	$data['deals'] = $this->Common_model->getTotalDeals('',$category_slug,$search_for,'pro','3');	// $category_slug for value to searc and $search_for for searching fields
+               
+			$this->Common_model->make_analytic_data($data['deals'],'views');  						// Insert data to analytics table for views
+                       
+                		 $this->load->view('front/common/header', $headerdata);
 					 $this->load->view('front/common/menu_header', $headerdata);
 					 $this->load->view('front/online_stores_all',$data);
 					 $this->load->view('front/common/footer');
@@ -202,11 +214,11 @@ class Welcome extends CI_Controller {
 									 $headerdata['active_class'] = '';
 								  }
 								
-					$headerdata['action_msg'] = ( $this->session->flashdata('action_msg') != '' )?$this->session->flashdata('action_msg'):'';
+				$headerdata['action_msg'] = ( $this->session->flashdata('action_msg') != '' )?$this->session->flashdata('action_msg'):'';
 		    		$category_slug='';
 		    		$search_for = '';
 		    		
-		    		if( ($this->uri->segment(3) == 'category') && ($this->uri->segment(4) != '') ) {			//---- For category wise search
+		    	if( ($this->uri->segment(3) == 'category') && ($this->uri->segment(4) != '') ) {			//---- For category wise search
 			    				$category_slug = str_replace('%20','-',$this->uri->segment(4));
 			    				//$category_slug = str_replace((/[`~!@#$%^&*()|+\_\s+=?;:'",.<>\{\}\[\]\\\/]/gi), '',$category_slug);
 			    				//echo $category_slug = preg_replace("/[^A-Za-z0-9 ]/", '',$category_slug); exit;
@@ -218,14 +230,20 @@ class Welcome extends CI_Controller {
 			    				//echo $category_slug = preg_replace("/[^A-Za-z0-9 ]/", '',$category_slug); exit;
 			    				$search_for = 'all';
                                 }
-		    		 $data['deals'] = $this->Common_model->getTotalDeals('',$category_slug,$search_for,'pro','1');	// $category_slug for value to searc and $search_for for searching fields
-                                         
-                $this->load->view('front/common/header', $headerdata);
+		    	$data['deals'] = $this->Common_model->getTotalDeals('',$category_slug,$search_for,'pro','1');	// $category_slug for value to searc and $search_for for searching fields
+                            
+			if($this->uri->segment(3) == 'search'){
+				$this->Common_model->make_analytic_data($data['deals'],'search');  						// Insert data to analytics table for views
+				}
+				else{
+						$this->Common_model->make_analytic_data($data['deals'],'views');  						// Insert data to analytics table for views
+					  }
+             
+                		 $this->load->view('front/common/header', $headerdata);
 					 $this->load->view('front/common/menu_header', $headerdata);
 					 $this->load->view('front/deals',$data);
 					 $this->load->view('front/common/footer');
-     		}
-     		
+     		}		
      		
      		
      		public function pricing() {

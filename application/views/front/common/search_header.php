@@ -15,8 +15,8 @@
                         <span>Blog</span>
                         <span class="space">&nbsp;</span>
                         <span class="top_search">
-                        	<input type="text" class="inputbox" placeholder="Search" >
-                            <input type="button" value="" class="search_btn">
+                        	<input type="text" id="blog_search" class="inputbox" placeholder="Search" >
+                            <input type="button"  value="" class="search_btn">
                         </span>
                         <span class="space">&nbsp;</span>
                         <span><a href="#">Pricing</a></span>

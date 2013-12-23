@@ -13,8 +13,7 @@
                     <div class="contact_form campaign_form">
                     	<div class="block">
                             <h2 class="title"><span id="selected_tab_header">Metrics and Analytics</span> : <span id="selected_store_header">Loding...</span></h2>
-									
-									
+																		
 									<!-- Action Message Section Start-->
 									<?php if( $this->session->flashdata( 'action_msg' ) ){?>
 									 <div class="row-fluid">
@@ -30,12 +29,19 @@
                             	<div class="span3">
                             		<?php if($stores){ 
                             						$store_actv_flag     = '0';
-                            						$selected_store_name = $stores[0]->store_name;
+											if($type_of_analytics == 'deal'){
+														$selected_store_name = $stores[0]->business_name;
+												}else{
+                            									$selected_store_name = $stores[0]->store_name;
+														}
                             		?>
                             			<ul class="links links1">
-                            				<?php foreach($stores as $store){ ?>
-                            						<li <?php if($requested_store_id == $store->store_id) { $selected_store_name = $store->store_name; echo "class=active"; } ?> ><a href="<?=base_url('user/analytics/store/'.$store->store_id)?>"><?=$store->store_name;?></a></li>
-                            				<?php } ?>
+									<?php foreach($stores as $store){ 
+												if($type_of_analytics == 'deal'){ ?>
+											<li <?php if($requested_store_id == $store->id) { $selected_store_name = $store->business_name; echo "class=active"; } ?> ><a href="<?=base_url('user/analytics/deal/'.$store->id.'/'.$analytic_type)?>"><?=$store->business_name;?></a></li>
+                            				<?php } else{  ?>
+                            						<li <?php if($requested_store_id == $store->store_id) { $selected_store_name = $store->store_name; echo "class=active"; } ?> ><a href="<?=base_url('user/analytics/store/'.$store->store_id.'/'.$analytic_type)?>"><?=$store->store_name;?></a></li>
+                            				<?php } } ?>
                                     </ul>
                             		<?php } else{ echo "No Stores found";}?>
                                 	<input type="hidden" id="selected_store_name" value="<?=$selected_store_name;?>">
@@ -203,8 +209,81 @@
 								<?php }  }
 										   elseif($analytic_type == 'visit'){?>
 														<script type="text/javascript">
+																	<?php 
+																			 $tot_click = array('clicks'=>'','views'=>'','url_nav'=>'','search'=>'');
+																			
+																				$day_list = array();
+																				 if(!empty($clicks_rate_weeks))
+																						foreach($clicks_rate_weeks as $week){ $day_list[] = "'".$week['date']."'"; }
+																				if(!empty($views_rate_weeks))
+																						foreach($views_rate_weeks as $week){ $day_list[] = "'".$week['date']."'"; }
+																				if(!empty($search_rate_weeks))
+																						foreach($search_rate_weeks as $week){ $day_list[] = "'".$week['date']."'";}
+																				if(!empty($url_nav_rate_weeks))
+																						foreach($url_nav_rate_weeks as $week){ $day_list[] = "'".$week['date']."'";}
+
+																				 if(!empty($day_list)){
+																						$day_list = array_unique($day_list);
+																				
+
+																						for($i=0;$i<count($day_list);$i++){
+
+																								 if(!empty($clicks_rate_weeks)){
+																									foreach($clicks_rate_weeks as $clicks_rate){
+																											if($day_list[$i] == "'".$clicks_rate['date']."'") {
+																														$tot_click['clicks'][$i] = $clicks_rate['tot_click'];  break;
+																														}else{
+																															    $tot_click['clicks'][$i] = '0'; 
+																															    }
+																										}
+																									}
+																								if(!empty($views_rate_weeks)){
+																									foreach($views_rate_weeks as $views_rate){
+																										if($day_list[$i] == "'".$views_rate['date']."'"){
+																													$tot_click['views'][$i] = $views_rate['tot_click'];   break;
+																													}else{
+																														 $tot_click['views'][$i] = '0'; }
+																										}
+																									}
+																								if(!empty($search_rate_weeks)){
+																									foreach($search_rate_weeks as $search_rate){
+																										if($day_list[$i] == "'".$search_rate['date']."'"){
+																													$tot_click['search'][$i] = $search_rate['tot_click'];   break;
+																													}else{
+																														 $tot_click['search'][$i] = '0'; }
+																										}
+																									}
+																								if(!empty($url_nav_rate_weeks)){
+																									foreach($url_nav_rate_weeks as $url_nav_rate){
+																										if($day_list[$i] == "'".$url_nav_rate['date']."'"){
+																													$tot_click['url_nav'][$i] = $url_nav_rate['tot_click'];   break;
+																													}else{
+																														 $tot_click['url_nav'][$i]= '0'; }
+																										}
+																									}
+																						}
+																				if(!empty($tot_click['clicks']))
+																								$tot_click['clicks'] = implode(',',$tot_click['clicks']);
+																								else
+																									$tot_click['clicks'] = '0';
+																						if(!empty($tot_click['views']))
+																								$tot_click['views'] = implode(',',$tot_click['views']);
+																								else
+																									$tot_click['views'] = '0';
+																						if(!empty($tot_click['search']))
+																								$tot_click['search'] = implode(',',$tot_click['search']);
+																									else
+																									$tot_click['search'] = '0';
+
+																						if(!empty($tot_click['url_nav']))
+																								$tot_click['url_nav'] = implode(',',$tot_click['url_nav']);		
+																									else
+																									$tot_click['url_nav'] = '0';																			
+																				 }
+																				 ?>
+
 																	$(function () {
-																		   $('#container_visit').highcharts({   // weekly page visit
+																		   $('#container_visit').highcharts({   // weekly page visit 
 																			  chart: {
 																				 type: 'column'
 																			  },
@@ -214,9 +293,8 @@
 																			  subtitle: {
 																				 text: ''
 																			  },
-																			  xAxis: {
-																				
-																				 categories: ['Jan','Feb','Mar','Apr']
+																			  xAxis: {																
+																				 categories: [<?=implode(',',$day_list);?>]
 																			  },
 																			  yAxis: {
 																				 min: 0,
@@ -244,29 +322,107 @@
 																				  }
 																			   },
 																			  series: [{
-																				 name: 'Tokyo',
-																				 data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+																				 name: 'Views',
+																				 data: [<?=$tot_click['views'];?>]
 																	    
 																			  }, {
-																				 name: 'New York',
-																				 data: [83.6, 78.8, 98.5, 93.4, 106.0, 84.5, 105.0, 104.3, 91.2, 83.5, 106.6, 92.3]
+																				 name: 'Clicks',
+																				 data: [<?=$tot_click['clicks'];?>]
 																	    
 																			  }, {
-																				 name: 'London',
-																				 data: [48.9, 38.8, 39.3, 41.4, 47.0, 48.3, 59.0, 59.6, 52.4, 65.2, 59.3, 51.2]
+																				 name: 'URL Nav',
+																				 data: [<?=$tot_click['url_nav'];?>]
 																	    
 																			  }, {
-																				 name: 'Berlin',
-																				 data: [42.4, 33.2, 34.5, 39.7, 52.6, 75.5, 57.4, 60.4, 47.6, 39.1, 46.8, 51.1]
+																				 name: 'Seach',
+																				 data: [<?=$tot_click['search'];?>]
 																	    
 																			  }]
 																		   });
 																	    });
 														</script>
-														<div id="container_visit" style="border:1px solid #ddd; min-width: 150px; height: 300px; margin: 0 auto"></div>										
-											<?php }
+														<?php if(($tot_click['search'] != '') || ($tot_click['clicks']  != '') || ($tot_click['views'] != '') || ($tot_click['url_nav'] != '')) {?>
+																			<div id="container_visit" style="border:1px solid #ddd; min-width: 150px; height: 300px; margin: 0 auto"></div>	
+														<?php } else{ ?>			
+																<div id="false_container_visit" style="border:1px solid #ddd;  text-align:center; color:red; padding: 100px; min-width: 150px; height: 0px; ">No Analytics found for this store</div>							
+														<?php } ?>			
+								<?php }
 													   elseif($analytic_type == 'campaign'){?>
 																	<script type="text/javascript">
+																			<?php 
+																					 $tot_click = array('clicks'=>'','views'=>'','url_nav'=>'','search'=>'');
+		
+																						$day_list = array();
+																						 if(!empty($clicks_rate_weeks))
+																								foreach($clicks_rate_weeks as $week){ $day_list[] = "'".$week['date']."'"; }
+																						if(!empty($views_rate_weeks))
+																								foreach($views_rate_weeks as $week){ $day_list[] = "'".$week['date']."'"; }
+																						if(!empty($search_rate_weeks))
+																								foreach($search_rate_weeks as $week){ $day_list[] = "'".$week['date']."'";}
+																						if(!empty($url_nav_rate_weeks))
+																								foreach($url_nav_rate_weeks as $week){ $day_list[] = "'".$week['date']."'";}
+
+
+
+																						 if(!empty($day_list)){
+																								$day_list = array_unique($day_list);
+			
+
+																								for($i=0;$i<count($day_list);$i++){
+
+																										 if(!empty($clicks_rate_weeks)){
+																											foreach($clicks_rate_weeks as $clicks_rate){
+																													if($day_list[$i] == "'".$clicks_rate['date']."'") {
+																																$tot_click['clicks'][$i] = $clicks_rate['tot_click'];  break;
+																																}else{
+																																	    $tot_click['clicks'][$i] = '0'; 
+																																	    }
+																												}
+																											}
+																										if(!empty($views_rate_weeks)){
+																											foreach($views_rate_weeks as $views_rate){
+																												if($day_list[$i] == "'".$views_rate['date']."'"){
+																															$tot_click['views'][$i] = $views_rate['tot_click'];   break;
+																															}else{
+																																 $tot_click['views'][$i] = '0'; }
+																												}
+																											}
+																										if(!empty($search_rate_weeks)){
+																											foreach($search_rate_weeks as $search_rate){
+																												if($day_list[$i] == "'".$search_rate['date']."'"){
+																															$tot_click['search'][$i] = $search_rate['tot_click'];   break;
+																															}else{
+																																 $tot_click['search'][$i] = '0'; }
+																												}
+																											}
+																										if(!empty($url_nav_rate_weeks)){
+																											foreach($url_nav_rate_weeks as $url_nav_rate){
+																												if($day_list[$i] == "'".$url_nav_rate['date']."'"){
+																															$tot_click['url_nav'][$i] = $url_nav_rate['tot_click'];   break;
+																															}else{
+																																 $tot_click['url_nav'][$i]= '0'; }
+																												}
+																											}
+																								}
+																						if(!empty($tot_click['clicks']))
+																								$tot_click['clicks'] = implode(',',$tot_click['clicks']);
+																								else
+																									$tot_click['clicks'] = '0';
+																						if(!empty($tot_click['views']))
+																								$tot_click['views'] = implode(',',$tot_click['views']);
+																								else
+																									$tot_click['views'] = '0';
+																						if(!empty($tot_click['search']))
+																								$tot_click['search'] = implode(',',$tot_click['search']);
+																									else
+																									$tot_click['search'] = '0';
+
+																						if(!empty($tot_click['url_nav']))
+																								$tot_click['url_nav'] = implode(',',$tot_click['url_nav']);		
+																									else
+																									$tot_click['url_nav'] = '0';	
+																						 }
+																						 ?>																		
 																				$(function () {
 																						   $('#container_campaign').highcharts({   // weekly page visit campaign wise
 																							  chart: {
@@ -279,7 +435,7 @@
 																								 text: ''
 																							  },
 																							  xAxis: {
-																								 categories: ['Jan','Feb','Mar','Apr',	'May',	'Jun','Jul','Aug','Sep','Oct','Nov',	'Dec']
+																								 categories: [<?=implode(',',$day_list);?>]
 																							  },
 																							  yAxis: {
 																								 min: 0,
@@ -307,27 +463,31 @@
 																									  }
 																								   },
 																							  series: [{
-																								 name: 'Tokyo',
-																								 data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+																								 name: 'Views',
+																								 data: [<?=$tot_click['views'];?>]
 																					    
 																							  }, {
-																								 name: 'New York',
-																								 data: [83.6, 78.8, 98.5, 93.4, 106.0, 84.5, 105.0, 104.3, 91.2, 83.5, 106.6, 92.3]
+																								 name: 'Clicks',
+																								 data: [<?=$tot_click['clicks'];?>]
 																					    
 																							  }, {
-																								 name: 'London',
-																								 data: [48.9, 38.8, 39.3, 41.4, 47.0, 48.3, 59.0, 59.6, 52.4, 65.2, 59.3, 51.2]
+																								 name: 'URL Nav',
+																								 data: [<?=$tot_click['url_nav'];?>]
 																					    
 																							  }, {
-																								 name: 'Berlin',
-																								 data: [42.4, 33.2, 34.5, 39.7, 52.6, 75.5, 57.4, 60.4, 47.6, 39.1, 46.8, 51.1]
+																								 name: 'Search',
+																								 data: [<?=$tot_click['search'];?>]
 																					    
 																							  }]
 																						   });
 																					    });
 																		</script>
-																	<div id="container_campaign" style="border:1px solid #ddd; min-width: 150px; height: 300px; margin: 0 auto"></div>
-														<?php } ?>
+																	<?php if(($tot_click['search'] != '') || ($tot_click['clicks']  != '') || ($tot_click['views'] != '') || ($tot_click['url_nav'] != '')) {?>
+																			<div id="container_campaign" style="border:1px solid #ddd; min-width: 150px; height: 300px; margin: 0 auto"></div>	
+																	<?php } else{ ?>			
+																			<div id="false_container_campaign" style="border:1px solid #ddd;  text-align:center; color:red; padding: 100px; min-width: 150px; height: 0px; ">No Analytics found for this Campaign</div>							
+																	<?php } ?>
+																	<?php } ?>
 										
                                     </div>
                                     <!-- ANALYTICS  END -->

@@ -14,9 +14,9 @@
         <script type="text/javascript" src="<?php echo base_url('themes/thirdparty_js/fancybox/fancybox/jquery.fancybox-1.3.4.js'); ?>"></script>
         <script type="text/javascript" src="<?php echo base_url('themes/thirdparty_js/fancybox/fancybox/jquery.easing-1.3.pack.js'); ?>"></script>
         <link rel="stylesheet" href="<?php echo base_url('themes/thirdparty_js/fancybox/fancybox/jquery.fancybox-1.3.4.css'); ?>" type="text/css" media="screen" />
-        <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script> // for date picker
-        <link rel="stylesheet" href="<?=base_url('themes/thirdparty_js/jquery_ui_datepicker/jquery-ui.css');?>" /> // for date picker
-        // ----- Datepicker code
+        <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script> <!-- // for date picker -->
+        <link rel="stylesheet" href="<?=base_url('themes/thirdparty_js/jquery_ui_datepicker/jquery-ui.css');?>" /> <!--  // for date picker -->
+        <!-- ----- Datepicker code  -->
         
         <script>
 		   //$.noConflict();
@@ -32,8 +32,10 @@
 		        });
 		    });*/
 		
-		</script>        
-        // ----- Datepicker code        
+		</script>
+        
+        <!-- ----- Datepicker code  -->
+
         
         <!-- Demo page code -->
 

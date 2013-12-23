@@ -1123,19 +1123,30 @@ d.business_image");
     
     public function dealDetails($dealId){
         
-        $this->db->select('u.display_name,deals.*,cat.category_name,loc.zip zip_id, loc_c.city city_name');
-        $this->db->from('user_profile u');
-        $this->db->join('deals deals', 'deals.user_id = u.user_id','left');
-	   $this->db->join('location loc', 'loc.loc_id = deals.city_area','left');
-	   $this->db->join('location loc_c', 'loc_c.loc_id = deals.city','left');
-        $this->db->join('category cat', 'deals.category_id = cat.category_id','left');
-        $this->db->where('deals.id',$dealId);
-        $this->db->where('deals.status','1');
-        $qry = $this->db->get();
-        //echo $this->db->last_query();
-        //die();
-	  $this->make_analytic_data($qry->result(),'click');
-        return $qry->result();
+	  if($dealId){
+			   $this->db->select('u.display_name,deals.*,cat.category_name,loc.zip zip_id, loc_c.city city_name');
+			   $this->db->from('user_profile u');
+			   $this->db->join('deals deals', 'deals.user_id = u.user_id','left');
+			   $this->db->join('location loc', 'loc.loc_id = deals.city_area','left');
+			   $this->db->join('location loc_c', 'loc_c.loc_id = deals.city','left');
+			   $this->db->join('category cat', 'deals.category_id = cat.category_id','left');
+			   $this->db->where('deals.id',$dealId);
+			   $this->db->where('deals.status','1');
+			   $qry = $this->db->get();
+
+			   $result = $qry->result();
+
+			   $this->make_analytic_data($result,'click');  						// Insert data to analytics table for click
+
+			   if($result[0]->campaign_type == 'pro'){							// Insert data to analytics table for click
+					$this->make_analytic_data($result,'url_nav');
+					}
+
+			   return $result;
+		}
+		else{
+				return false;
+			  }
     }
 
 	public function make_analytic_data($arr = array(),$action_type='click'){
@@ -1211,7 +1222,9 @@ d.business_image");
 
 	if($store_id != '' && is_numeric($store_id)){	
 			$sql =    "SELECT COUNT(1) AS tot_click, DATE_FORMAT(  `created_date` ,  '%d/%m/%y' ) as date FROM `analytics`
-						WHERE `store_id` = ".$store_id." AND (DATEDIFF( date_format(now(),'%Y/%m/%d'),  date_format(`created_date`,'%Y/%m/%d') ) < 7)
+						WHERE `store_id` = ".$store_id." 
+						AND (DATEDIFF( date_format(now(),'%Y/%m/%d'),  date_format(`created_date`,'%Y/%m/%d') ) < 7) 
+						AND action_type = 'click' 
 						group by DATE_FORMAT(`created_date`,'%d/%m/%y')
 						order by `created_date` asc";
 			//echo $sql;
@@ -1239,6 +1252,41 @@ d.business_image");
 				return false;
 				}
 	}
+
+	public function visit_rate_weeks($id = '',$fetch_type = 'visit',$id_type = 'store_id'){
+
+			if($id !== '' && is_numeric($id)){
+
+					$sql =    "SELECT COUNT(1) AS tot_click, DATE_FORMAT(  `created_date` ,  '%d/%m/%y' ) as date FROM `analytics`
+								WHERE `".$id_type."` = ".$id." 
+								AND (DATEDIFF( date_format(now(),'%Y/%m/%d'),  date_format(`created_date`,'%Y/%m/%d') ) < 7) 
+								AND action_type = '".$fetch_type."'
+								group by DATE_FORMAT(`created_date`,'%d/%m/%y')
+								order by `created_date` asc";
+
+						$data = mysql_query($sql);
+						if(mysql_num_rows($data)){
+						while($a = mysql_fetch_assoc($data)){
+							$qry[] = $a; 
+						}
+
+						//$qry = $this->db->get($sql);
+						//echo "<pre>";print_r($qry); exit;
+						if(count($qry)>0){
+							return $qry;
+							}
+							else{
+									return false;
+									}
+						}
+						else{
+								return false;
+								}
+				}
+				else{
+					return false;
+					}
+		}
     
     public function fetch_static_page($id=''){
     	

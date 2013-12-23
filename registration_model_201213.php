@@ -88,12 +88,13 @@ class Registration_model extends CI_Model {
 					$this->db->from('user');
 					$qry = $this->db->get();
 					$user = $qry->row(); 
-
+//print_r($user);die();
 					if(!empty($user)){
 					
 							if($user->user_type == 'end_user'){
 								$dataArray = array('status'=>'1');
-/* update blog table*/
+								
+								/* update blog table*/
 								$stat_sql2 = "update `wp_usercontrol` set `disable_status`='enabled' where `ID`=".$user->blog_id;
 								$query2 =$this->db->query($stat_sql2);
 								/* update blog table*/
@@ -155,11 +156,12 @@ class Registration_model extends CI_Model {
 			if(!empty($r)){
 				$user_profile_data['lat'] = $r['lat'];
 				$user_profile_data['long'] = $r['long'];
-				}
+			}
 	
 			$this->db->insert('user_profile',$user_profile_data);
-
-/*insert data into blog*/
+			
+			
+			/*insert data into blog*/
 			$names = $first_name.' '.$last_name;
 			$insert_sql = "insert into `wp_users` set ".
 						  "`user_login`='".$email."',".
@@ -200,7 +202,6 @@ class Registration_model extends CI_Model {
 			$this->db->query($update_sql);
 			
 			/*insert data into blog*/
-
 
 			return $inserted_user_id ;			
 	}

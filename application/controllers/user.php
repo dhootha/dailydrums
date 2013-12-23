@@ -701,15 +701,15 @@ class User extends CI_Controller {
 							 redirect(site_url('user'));
 						 }
 			$headerdata['page_title'] = 'My Analytic';
-			
+			$headerdata['type_of_analytics'] = 'store';
 
 			 $headerdata['action_msg'] = ( $this->session->flashdata('action_msg') != '' )?$this->session->flashdata('action_msg'):'';
 			 $headerdata['action']     = ( $this->session->flashdata('action') != '' )?$this->session->flashdata('action'):'';
 			 
 			 // if store requested for selection
 			 $headerdata['analytic_type'] = 'click';
-			 if( $this->uri->segment(3) == 'store' && $this->uri->segment(4) != '' && is_numeric($this->uri->segment(4)) ) {
-
+			 if( $this->uri->segment(3) == 'store' || $this->uri->segment(3) == 'deal' && $this->uri->segment(4) != '' && is_numeric($this->uri->segment(4)) ) {
+						
 						$headerdata['requested_store_id'] = $this->uri->segment(4);
 						if($this->uri->segment(5) == '' )
 							$headerdata['analytic_type'] = 'click';
@@ -724,7 +724,7 @@ class User extends CI_Controller {
 						}		
 			
 			//echo $headerdata['selected_tab'];					
-			 $store_cond 					= array( 'user_id'=>$id );
+			 $store_cond 			     = array( 'user_id'=>$id );
 			 $headerdata['stores']     = $this->Common_model->fetch_stores( $store_cond );
 			 
 			 // if no store requested for selection
@@ -733,11 +733,29 @@ class User extends CI_Controller {
 
 			if( $headerdata['analytic_type'] == 'click'){
 
-				$headerdata['click_rate_months'] =  $this->Common_model->click_rate_months($headerdata['requested_store_id']);
-				$headerdata['click_rate_weeks'] =  $this->Common_model->click_rate_weeks($headerdata['requested_store_id']);
-				//echo "<pre>"; print_r($headerdata['click_rate_weeks']); exit;
-				}
-			 
+					$data['click_rate_months'] =  $this->Common_model->click_rate_months($headerdata['requested_store_id']);
+					$data['click_rate_weeks'] =  $this->Common_model->click_rate_weeks($headerdata['requested_store_id']);
+					//echo "<pre>"; print_r($headerdata['click_rate_weeks']); exit;
+					}
+					elseif($headerdata['analytic_type'] == 'visit'){
+					
+							$data['views_rate_weeks']    =  $this->Common_model->visit_rate_weeks($headerdata['requested_store_id'],'views','store_id');
+							$data['url_nav_rate_weeks'] =  $this->Common_model->visit_rate_weeks($headerdata['requested_store_id'],'url_nav','store_id');
+							$data['search_rate_weeks']   =  $this->Common_model->visit_rate_weeks($headerdata['requested_store_id'],'search','store_id');
+							$data['clicks_rate_weeks']     =  $this->Common_model->visit_rate_weeks($headerdata['requested_store_id'],'click','store_id');
+							}
+							elseif($headerdata['analytic_type'] == 'campaign'){
+
+									$headerdata['stores']  = $this->Deals_model->get_Deal_details(array('d.user_id'=>$id));
+									$headerdata['type_of_analytics'] = 'deal';
+									$data['views_rate_weeks']    =  $this->Common_model->visit_rate_weeks($headerdata['requested_store_id'],'views','deal_id');
+									$data['url_nav_rate_weeks'] =  $this->Common_model->visit_rate_weeks($headerdata['requested_store_id'],'url_nav','deal_id');
+									$data['search_rate_weeks']   =  $this->Common_model->visit_rate_weeks($headerdata['requested_store_id'],'search','deal_id');
+									$data['clicks_rate_weeks']     =  $this->Common_model->visit_rate_weeks($headerdata['requested_store_id'],'click','deal_id');
+									}
+				
+			// echo "<pre>"; print_r($data); exit;
+
 			 // For fetch subscribers list and extract active and pending subcribers.	
 			 $headerdata['active_subscribers']  = false;
 			 $headerdata['pending_subscribers'] = false;		
@@ -746,7 +764,7 @@ class User extends CI_Controller {
 			 			
 			 $this->load->view('front/common/header', $headerdata);
 			 $this->load->view('front/common/menu_header', $headerdata);
-			 $this->load->view('front/analytic');
+			 $this->load->view('front/analytic',$data);
 			 $this->load->view('front/common/footer');
 		}
 	
