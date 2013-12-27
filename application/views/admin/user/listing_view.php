@@ -9,8 +9,11 @@ $this->load->view('admin/admin_include/admin_left_nav_view');
 <script type="text/javascript" >
 
 		function submit_user_type(){
-				window.location = "<?=base_url('admin/user/home');?>" + "/" + $('#user_type').val();
-			
+			window.location = "<?=base_url('admin/user/home');?>" + "/" + $('#user_type').val();
+			}
+
+		function add_new_user(){
+			window.location = "<?=base_url('admin/user/add_user');?>" + "/" + $('#add_user_type').val();
 			}
 </script>
 
@@ -39,20 +42,38 @@ $this->load->view('admin/admin_include/admin_left_nav_view');
                 </div> -->
                 
                 <div class="btn-toolbar">
-                    <select name="user_type" id="user_type" onchange="submit_user_type();">
+                    <select name="add_user_type" id="add_user_type"">
+								<option value="business_basic" <?=($selcted_user == 'business_basic')?'selected=selected':'';?>>Business Basic</option>   
+								<option value="business_pro" <?=($selcted_user == 'business_pro')?'selected=selected':'';?>>Business Pro</option> 
+								<option value="end_user" <?=($selcted_user == 'end_user')?'selected=selected':'';?>>End User</option>                  
+                    </select>
+				<button class="btn btn-primary" style="margin-bottom:10px;" onclick="add_new_user();" onclick="window.location.href = '<?php echo base_url('admin/user/add_user'); ?>'">
+                        <strong>+ </strong>Add
+                    </button>
+                    <div class="btn-group"></div> 
+
+				<span style="float:right;" >
+				<button class="btn btn-primary" style="margin-bottom:10px;" onclick="submit_user_type();" onclick="window.location.href = '<?php echo base_url('admin/user/add_user'); ?>'">
+                        View<strong> - </strong>
+                    </button>
+				<select name="user_type" id="user_type" >
 								<option value="all" selected="selected">All</option>  
 								<option value="business_basic" <?=($selcted_user == 'business_basic')?'selected=selected':'';?>>Business Basic</option>   
 								<option value="business_pro" <?=($selcted_user == 'business_pro')?'selected=selected':'';?>>Business Pro</option> 
 								<option value="end_user" <?=($selcted_user == 'end_user')?'selected=selected':'';?>>End User</option>                  
                     </select>
-                    <div class="btn-group"></div>                    
+				</span>
+				<div class="btn-group"></div>                        
                 </div>
+
+
             <div class="well">
                 
                 <table class="table bordered">
                     <thead>
                         <tr>
                             <th>Name</th>
+					   <th>Display Name</th>
                             <th>Type</th>
                             <th>Created On</th>
                             <th>Status</th>
@@ -68,6 +89,7 @@ $this->load->view('admin/admin_include/admin_left_nav_view');
                                 
                                 <tr>
                                     <td><?php echo stripslashes($user->firstname.' '.$user->lastname);?></td>
+							<td><?php echo stripslashes($user->display_name);?></td>
                                     <td><?php if($user->user_type == 'business_basic') echo"Business(Basic)"; elseif($user->user_type == 'business_pro') echo"Business(Pro)"; else echo"End user";?></td>
                                     <td><?php echo $user->created_date?></td>
                                     <td>

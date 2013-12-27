@@ -25,7 +25,7 @@ $method_name = $this->router->fetch_method();
     <a href="#dashboard-menu4" class="nav-header" data-toggle="collapse" <?php if($page_name == 'user') echo 'style="font-weight:bold;"'; else echo '';?>>User Management</a>
     <ul id="dashboard-menu4" class="nav nav-list collapse <?php if($page_name == 'user') echo 'in'; else echo '';?>">
         <li class="submenu"><a href="<?php echo base_url('admin/user/');?>">User List</a></li>
-        <!-- <li class="submenu"><a href="<?php echo base_url('admin/user/add_user');?>">Add User</a></li> -->
+       <!-- <li class="submenu"><a href="<?php echo base_url('admin/user/add_user');?>">Add User</a></li> -->
     </ul>
     
     <a href="#dashboard-menu5" class="nav-header" data-toggle="collapse" <?php if($page_name == 'store') echo 'style="font-weight:bold;"'; else echo '';?>>Stores</a>

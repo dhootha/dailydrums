@@ -65,7 +65,7 @@ class Registration extends CI_Controller {
     
     public function business_registration_submit() {
     	
-    								 $this->form_validation->set_rules('name', 'Name', 'trim|required|max_length[30]|xss_clean');
+    								      $this->form_validation->set_rules('name', 'Name', 'trim|required|max_length[30]|xss_clean');
 									 $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|xss_clean|email|is_unique[user.email]');
 									 $this->form_validation->set_rules('email_again', 'Retype Email', 'trim|required|valid_email|xss_clean|email|matches[email]');
 									 $this->form_validation->set_rules('password', 'Password', 'trim|required|max_length[30]|min_length[8]|xss_clean');
@@ -223,7 +223,7 @@ class Registration extends CI_Controller {
 							  $this->load->model('Insert_data_model');
 							  $this->Insert_data_model->save_user_plan_map_data($plan_map_array); 		// Saving plan map data
 							 
-							  $to = trim($pro_email);
+						   $to = trim($pro_email);
 					        $subject = 'Successfully registered in Dailydrums';
 					        $fromemail = 'noreply@dailydrums.com.com';
 					        $fromname = 'Dailydrums';

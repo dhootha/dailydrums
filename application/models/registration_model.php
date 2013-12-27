@@ -63,7 +63,7 @@ class Registration_model extends CI_Model {
 													    'primary_phone'=>$phone_primary );
 													    
 					$this->load->model('Common_model');
-		    		$r = $this->Common_model->fetchLatLong($zip);
+		    			$r = $this->Common_model->fetchLatLong($zip);
 					if(!empty($r)){
 						$user_profile_data['lat'] = $r['lat'];
 						$user_profile_data['long'] = $r['long'];
@@ -150,7 +150,7 @@ class Registration_model extends CI_Model {
 									    'gender'=>$gender
 									     );
 									     
-			$this->load->model('Common_model');
+		$this->load->model('Common_model');
     		$r = $this->Common_model->fetchLatLong($zip);
 			if(!empty($r)){
 				$user_profile_data['lat'] = $r['lat'];
